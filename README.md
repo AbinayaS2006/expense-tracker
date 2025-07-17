@@ -1,1 +1,1 @@
-# expense-tracker
+# AI Expense-tracker
