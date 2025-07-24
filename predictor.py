@@ -1,32 +1,35 @@
-import sqlite3
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
-def load_data():
-    conn = sqlite3.connect("expense.db")
-    try:
-        df = pd.read_sql_query("SELECT date, amount FROM transactions WHERE type='Expense'", conn)
-    except Exception as e:
-        conn.close()
-        return pd.DataFrame(columns=['date', 'amount'])
+# Load data from CSV and add 'month_num' for model
+def load_data(file_path):
+    df = pd.read_csv(file_path)
+    
+    # Check if 'month' and 'total' columns exist
+    if 'month' not in df.columns or 'total' not in df.columns:
+        raise ValueError("CSV must contain 'month' and 'total' columns")
 
-    conn.close()
-    if df.empty:
-        return pd.DataFrame(columns=['date', 'amount'])
-
-    df['date'] = pd.to_datetime(df['date'])
-    df = df.groupby(pd.Grouper(key='date', freq='M')).sum().reset_index()
-    df['month_num'] = range(1, len(df) + 1)
+    # Convert month name (e.g., "January") to month number (1–12)
+    df['month_num'] = df['month'].apply(lambda m: pd.to_datetime(m, format='%B').month)
     return df
 
+# Train a linear regression model on month_num vs total expense
 def train_model(df):
     X = df[['month_num']]
-    y = df['amount']
+    y = df['total']
     model = LinearRegression()
     model.fit(X, y)
     return model
 
-def predict_next(model, last_month):
-    next_month = [[last_month + 1]]
-    prediction = model.predict(next_month)
-    return prediction[0]
+# Predict next month's expense based on the model
+def predict_next(model, df):
+    if 'month' not in df.columns:
+        raise ValueError("The input DataFrame must contain a 'month' column.")
+
+    # Ensure 'month_num' exists
+    df['month_num'] = df['month'].apply(lambda m: pd.to_datetime(m, format='%B').month)
+
+    X = df[['month_num']]
+    prediction = model.predict(X)
+    
+    return prediction[-1]  # Return the prediction for the latest month

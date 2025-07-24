@@ -1,7 +1,7 @@
 from transaction import Transaction
 from db_handler import create_table, add_transaction, fetch_all_transactions
 from ai_suggestion import generate_ai_suggestion
-from suth import visualize_spending
+from chart import visualize_spending
 from datetime import datetime
 
 create_table()
