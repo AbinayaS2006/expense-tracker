@@ -1,1 +1,5 @@
 "streamlit\nscikit-learn\npandas\nmatplotlib" 
+streamlit
+pandas
+matplotlib
+scikit-learn
