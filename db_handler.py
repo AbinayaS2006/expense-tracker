@@ -25,11 +25,10 @@ def add_transaction(transaction):
     ''', (transaction.category, transaction.amount, transaction.description, transaction.date, transaction.type))
     conn.commit()
     conn.close()
-
 def fetch_all_transactions():
-    conn = sqlite3.connect("expense.db")
-    c = conn.cursor()
-    c.execute("SELECT category, amount, description, date, type FROM transactions")
-    results = c.fetchall()
+    conn = sqlite3.connect("expenses.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM transactions")
+    rows = cursor.fetchall()
     conn.close()
-    return results
+    return rows
