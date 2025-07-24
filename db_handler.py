@@ -26,7 +26,7 @@ def add_transaction(transaction):
     conn.commit()
     conn.close()
 def fetch_all_transactions():
-    conn = sqlite3.connect("expenses.db")
+    conn = sqlite3.connect("expense.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM transactions")
     rows = cursor.fetchall()
