@@ -1,17 +1,15 @@
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
-# Load data from CSV and add 'month_num' for model
-def load_data(file_path):
-    df = pd.read_csv(file_path)
-    
-    # Check if 'month' and 'total' columns exist
-    if 'month' not in df.columns or 'total' not in df.columns:
-        raise ValueError("CSV must contain 'month' and 'total' columns")
-
-    # Convert month name (e.g., "January") to month number (1–12)
-    df['month_num'] = df['month'].apply(lambda m: pd.to_datetime(m, format='%B').month)
-    return df
+def load_data(filename):
+    try:
+        df = pd.read_csv(filename)
+        df['month_num'] = range(1, len(df) + 1)
+        df.rename(columns={'total': 'amount'}, inplace=True)
+        return df
+    except Exception as e:
+        print(f"Error loading data: {e}")
+        return pd.DataFrame()
 
 # Train a linear regression model on month_num vs total expense
 def train_model(df):
