@@ -2,19 +2,24 @@ import sqlite3
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
-# Load data from SQLite database (not CSV)
+# Load data from SQLite database
 def load_data():
     try:
-        conn = sqlite3.connect("expense.db")
+        conn = sqlite3.connect("expense.db")  # Ensure this matches your DB file
         df = pd.read_sql_query("""
-           SELECT strftime('%Y-%m', date) AS month, SUM(amount) as total 
-           FROM transactions
-           WHERE type = 'Expense' 
-           GROUP BY month 
-           ORDER BY month
+            SELECT strftime('%Y-%m', date) AS month, SUM(amount) AS total
+            FROM transactions
+            WHERE TRIM(LOWER(type)) = 'expense'
+            GROUP BY month
+            ORDER BY month
         """, conn)
         conn.close()
 
+        if df.empty:
+            print("⚠️ Query returned no data!")
+            return pd.DataFrame()
+
+        # Add month number column
         df['month_num'] = range(1, len(df) + 1)
         df.rename(columns={'total': 'amount'}, inplace=True)
         return df
