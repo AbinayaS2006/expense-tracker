@@ -4,4 +4,4 @@ class Transaction:
         self.amount = amount
         self.description = description
         self.date = date
-        self.type = t_type  # 'Income' or 'Expense'
+        self.t_type = t_type

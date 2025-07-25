@@ -1,8 +1,9 @@
 from transaction import Transaction
 from db_handler import create_table, add_transaction, fetch_all_transactions
 from ai_suggestion import generate_ai_suggestion
-from chart import visualize_spending
+from spending_chart import show_spending_chart
 from datetime import datetime
+import sqlite3
 
 create_table()
 
@@ -12,7 +13,8 @@ def menu():
     print("2. Add Expense")
     print("3. View Transactions")
     print("4. Analyze Spending (AI)")
-    print("5. Exit")
+    print("5. 📊 Visualize Expense Report")
+    print("6. Exit")
 
 while True:
     menu()
@@ -41,20 +43,22 @@ while True:
         print("✅ Expense added.")
 
     elif choice == '3':
+        print("\n=== Transactions ===")
         transactions = fetch_all_transactions()
-        if not transactions:
-            print("No transactions found.")
-        else:
-            print("\n=== Transactions ===")
+        if transactions:
             for t in transactions:
-                print(f"{t[4]} - ₹{t[1]:.2f} - {t[0]} - {t[2]} - {t[3]}")
+                print(f"{t[4]} - ₹{float(t[1]):.2f} - {t[0]} - {t[2]} - {t[3]}")
+        else:
+            print("No transactions found.")
 
     elif choice == '4':
         transactions = fetch_all_transactions()
         print(generate_ai_suggestion(transactions))
-        visualize_spending(transactions)
 
     elif choice == '5':
+        show_spending_chart()
+
+    elif choice == '6':
         print("👋 Exiting... Goodbye!")
         break
 
