@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression
 # Load data from SQLite database (not CSV)
 def load_data():
     try:
-        conn = sqlite3.connect("expenses.db")
+        conn = sqlite3.connect("expense.db")
         df = pd.read_sql_query("""
            SELECT strftime('%Y-%m', date) AS month, SUM(amount) as total 
            FROM transactions
