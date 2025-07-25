@@ -8,7 +8,7 @@ def load_data():
         conn = sqlite3.connect("expenses.db")
         df = pd.read_sql_query("""
             SELECT month, SUM(amount) as total 
-            FROM expenses 
+            FROM transactions
             WHERE type = 'Expense' 
             GROUP BY month 
             ORDER BY id
